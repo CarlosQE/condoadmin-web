@@ -76,3 +76,9 @@ nav ul li {
   color: #6c757d;
   min-height: 1.5rem;
 }
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 5rem 2rem 2rem 2rem;
+}
