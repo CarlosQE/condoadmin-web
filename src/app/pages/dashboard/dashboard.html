@@ -1,1 +1,49 @@
-<p>dashboard works!</p>
+<div class="dashboard">
+  <div class="page-header">
+    <div>
+      <h2>Dashboard</h2>
+      <p class="subtitle">Bienvenido al sistema de administración</p>
+    </div>
+    <span class="date">La Paz, Bolivia</span>
+  </div>
+
+  <!-- Tarjetas de estadísticas -->
+  <div class="stats-grid">
+    @for (stat of stats; track stat.label) {
+      <a class="stat-card" [routerLink]="stat.route">
+        <div class="stat-icon" [style.background]="stat.color + '20'"
+             [style.color]="stat.color">
+          {{ stat.icon }}
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stat.value }}</span>
+          <span class="stat-label">{{ stat.label }}</span>
+        </div>
+        <span class="stat-arrow">→</span>
+      </a>
+    }
+  </div>
+
+  <!-- Actividad reciente -->
+  <div class="recent-section">
+    <h3>Actividad reciente</h3>
+
+    <div class="activity-list">
+      @for (activity of recentActivity; track activity.id) {
+        <div class="activity-item">
+          <span class="activity-icon">{{ getActivityIcon(activity.type) }}</span>
+
+          <div class="activity-info">
+            <p class="activity-desc">{{ activity.description }}</p>
+            <span class="activity-date">{{ activity.date }}</span>
+          </div>
+
+          <span class="activity-status" [class.pending]="activity.status === 'pending'"
+                [class.completed]="activity.status === 'completed'">
+            {{ activity.status === 'completed' ? 'Completado' : 'Pendiente' }}
+          </span>
+        </div>
+      }
+    </div>
+  </div>
+</div>
