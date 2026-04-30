@@ -1,42 +1,9 @@
 <app-navbar></app-navbar>
 
 <div class="container">
-  <h1>{{ titulo }}</h1>
-  <p>{{ subtitulo }}</p>
-
-  <div class="stats">
-    <div class="stat-card">
-      <h2>{{ totalEdificios }}</h2>
-      <p>Edificios</p>
-    </div>
-    <div class="stat-card">
-      <h2>{{ totalUnidades }}</h2>
-      <p>Unidades</p>
-    </div>
-  </div>
-
-  <button (click)="toggleMenu()">
-    {{ menuAbierto ? 'Cerrar menú' : 'Abrir menú' }}
-  </button>
-
-  <nav [class.visible]="menuAbierto">
-    <ul>
-      <li>Edificios</li>
-      <li>Unidades</li>
-      <li>Residentes</li>
-      <li>Alquileres</li>
-    </ul>
-  </nav>
-
-  <div class="buscador">
-    <input
-      [(ngModel)]="busqueda"
-      placeholder="Buscar edificio..."
-      type="text"
-    />
-    <p>Buscando: <strong>{{ busqueda }}</strong></p>
-  </div>
-
-  <!-- Componente de edificios -->
-  <app-buildings></app-buildings>
+  <!-- router-outlet es el lugar donde Angular renderiza
+       el componente que corresponde a la URL actual.
+       Si estás en /buildings, renderiza Buildings.
+       Si estás en /dashboard, renderiza Dashboard. -->
+  <router-outlet></router-outlet>
 </div>

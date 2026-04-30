@@ -5,11 +5,23 @@
   </div>
 
   <ul class="navbar-links">
-    <li>Dashboard</li>
-    <li>Edificios</li>
-    <li>Unidades</li>
-    <li>Residentes</li>
-    <li>Alquileres</li>
+    <!-- routerLink define a qué URL navega el link -->
+    <!-- routerLinkActive agrega la clase CSS cuando esa ruta está activa -->
+    <li routerLinkActive="active">
+      <a routerLink="/dashboard">Dashboard</a>
+    </li>
+    <li routerLinkActive="active">
+      <a routerLink="/buildings">Edificios</a>
+    </li>
+    <li routerLinkActive="active">
+      <a routerLink="/units">Unidades</a>
+    </li>
+    <li routerLinkActive="active">
+      <a routerLink="/residents">Residentes</a>
+    </li>
+    <li routerLinkActive="active">
+      <a routerLink="/rentals">Alquileres</a>
+    </li>
   </ul>
 
   <div class="navbar-user">
