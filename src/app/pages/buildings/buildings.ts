@@ -1,16 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-// Interface que espeja el DTO del backend
-// Mismo contrato que AddBuildingOutput en C#
-interface Building {
-  id: number
-  name: string
-  address: string
-  city: string
-  totalUnits: number
-  isActive: boolean
-}
+import { BuildingService } from '../../core/services/building';
+import { Building } from '../../core/interfaces/building.interface';
 
 @Component({
   selector: 'app-buildings',
@@ -18,47 +9,40 @@ interface Building {
   styleUrl: './buildings.css',
   imports: [CommonModule]
 })
-export class Buildings {
-  // Lista de edificios — datos hardcodeados por ahora
-  // En la Fase 3 estos vendrán de la API real
-  buildings: Building[] = [
-    {
-      id: 1,
-      name: 'Torre Altura',
-      address: 'Av. Arce 2345',
-      city: 'La Paz',
-      totalUnits: 4,
-      isActive: true
-    },
-    {
-      id: 2,
-      name: 'Residencial Verde',
-      address: 'Calle 21 de Calacoto 890',
-      city: 'La Paz',
-      totalUnits: 2,
-      isActive: true
-    },
-    {
-      id: 3,
-      name: 'Torre Norte',
-      address: 'Av. Montes 123',
-      city: 'La Paz',
-      totalUnits: 0,
-      isActive: false  // Inactivo — para probar @if
-    }
-  ]
+export class Buildings implements OnInit {
+  private buildingService = inject(BuildingService)
 
-  // Propiedad para el edificio seleccionado
-  // null cuando no hay ninguno seleccionado
-  selectedBuilding: Building | null = null
+  buildings = signal<Building[]>([])
+  selectedBuilding = signal<Building | null>(null)
+  isLoading = signal(true)
+  errorMessage = signal('')
 
-  // Método para seleccionar un edificio
-  selectBuilding(building: Building) {
-    this.selectedBuilding = building
+  ngOnInit() {
+    this.loadBuildings()
   }
 
-  // Método para cerrar el detalle
+  loadBuildings() {
+    this.isLoading.set(true)
+    this.errorMessage.set('')
+
+    this.buildingService.getAll().subscribe({
+      next: (data) => {
+        this.buildings.set(data)
+        this.isLoading.set(false)
+      },
+      error: (err) => {
+        this.errorMessage.set('No se pudo conectar con el servidor. Verifica que la API esté corriendo.')
+        this.isLoading.set(false)
+        console.error(err)
+      }
+    })
+  }
+
+  selectBuilding(building: Building) {
+    this.selectedBuilding.set(building)
+  }
+
   clearSelection() {
-    this.selectedBuilding = null
+    this.selectedBuilding.set(null)
   }
 }

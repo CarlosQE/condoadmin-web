@@ -1,52 +1,64 @@
 <div class="buildings-page">
   <div class="page-header">
     <h2>Edificios</h2>
-    <span class="badge">{{ buildings.length }} registros</span>
-  </div>
-
-  <!-- Lista de edificios usando @for -->
-  <!-- @for itera sobre el array buildings -->
-  <!-- track b.id le dice a Angular cómo identificar cada elemento -->
-  <div class="buildings-grid">
-    @for (building of buildings; track building.id) {
-      <div
-        class="building-card"
-        [class.inactive]="!building.isActive"
-        (click)="selectBuilding(building)"
-      >
-        <div class="building-header">
-          <h3>{{ building.name }}</h3>
-
-          <!-- @if muestra el badge solo si está activo -->
-          @if (building.isActive) {
-            <span class="status active">Activo</span>
-          } @else {
-            <span class="status inactive">Inactivo</span>
-          }
-        </div>
-
-        <p class="address">📍 {{ building.address }}, {{ building.city }}</p>
-
-        <div class="building-footer">
-          <span>🏠 {{ building.totalUnits }} unidades</span>
-        </div>
-      </div>
+    @if (!isLoading()) {
+      <span class="badge">{{ buildings().length }} registros</span>
     }
   </div>
 
-  <!-- Panel de detalle — solo visible cuando hay un edificio seleccionado -->
-  @if (selectedBuilding) {
-    <div class="detail-panel">
-      <div class="detail-header">
-        <h3>{{ selectedBuilding.name }}</h3>
-        <button (click)="clearSelection()">✕ Cerrar</button>
-      </div>
-      <div class="detail-body">
-        <p><strong>Dirección:</strong> {{ selectedBuilding.address }}</p>
-        <p><strong>Ciudad:</strong> {{ selectedBuilding.city }}</p>
-        <p><strong>Total unidades:</strong> {{ selectedBuilding.totalUnits }}</p>
-        <p><strong>Estado:</strong> {{ selectedBuilding.isActive ? 'Activo' : 'Inactivo' }}</p>
-      </div>
+  <!-- Estado: cargando -->
+  @if (isLoading()) {
+    <div class="loading">
+      <span>⏳ Cargando edificios...</span>
     </div>
+  }
+
+  <!-- Estado: error -->
+  @if (errorMessage()) {
+    <div class="error-banner">
+      <span>⚠️ {{ errorMessage() }}</span>
+      <button (click)="loadBuildings()">Reintentar</button>
+    </div>
+  }
+
+  <!-- Estado: datos cargados -->
+  @if (!isLoading() && !errorMessage()) {
+    <div class="buildings-grid">
+      @for (building of buildings(); track building.id) {
+        <div
+          class="building-card"
+          [class.inactive]="!building.isActive"
+          (click)="selectBuilding(building)"
+        >
+          <div class="building-header">
+            <h3>{{ building.name }}</h3>
+            @if (building.isActive) {
+              <span class="status active">Activo</span>
+            } @else {
+              <span class="status inactive">Inactivo</span>
+            }
+          </div>
+          <p class="address">📍 {{ building.address }}, {{ building.city }}</p>
+          <div class="building-footer">
+            <span>🏠 {{ building.totalUnits }} unidades</span>
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (selectedBuilding()) {
+      <div class="detail-panel">
+        <div class="detail-header">
+          <h3>{{ selectedBuilding()!.name }}</h3>
+          <button (click)="clearSelection()">✕ Cerrar</button>
+        </div>
+        <div class="detail-body">
+          <p><strong>Dirección:</strong> {{ selectedBuilding()!.address }}</p>
+          <p><strong>Ciudad:</strong> {{ selectedBuilding()!.city }}</p>
+          <p><strong>Total unidades:</strong> {{ selectedBuilding()!.totalUnits }}</p>
+          <p><strong>Estado:</strong> {{ selectedBuilding()!.isActive ? 'Activo' : 'Inactivo' }}</p>
+        </div>
+      </div>
+    }
   }
 </div>
