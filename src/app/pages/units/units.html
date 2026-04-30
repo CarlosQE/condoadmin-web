@@ -1,1 +1,91 @@
-<p>units works!</p>
+<div class="units-page">
+  <div class="page-header">
+    <div>
+      <h2>Unidades</h2>
+      <p class="subtitle">Gestión de unidades por edificio</p>
+    </div>
+    <span class="badge">{{ filteredUnits().length }} unidades</span>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filters">
+    <select (change)="filterByBuilding($event)">
+      <option value="">Todos los edificios</option>
+      @for (building of buildings(); track building.id) {
+        <option [value]="building.id">{{ building.name }}</option>
+      }
+    </select>
+
+    <select (change)="filterByStatus($event)">
+      <option value="">Todos los estados</option>
+      <option value="0">Disponible</option>
+      <option value="1">Vendida</option>
+      <option value="2">Alquilada</option>
+    </select>
+
+    @if (selectedBuildingId() !== null || selectedStatus() !== null) {
+      <button class="btn-clear" (click)="clearFilters()">
+        ✕ Limpiar filtros
+      </button>
+    }
+  </div>
+
+  <!-- Estado de carga -->
+  @if (loading()) {
+    <div class="loading">
+      <p>Cargando unidades...</p>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (error()) {
+    <div class="error-box">
+      <p>⚠️ {{ error() }}</p>
+      <button (click)="loadUnits()">Reintentar</button>
+    </div>
+  }
+
+  <!-- Lista de unidades -->
+  @if (!loading() && !error()) {
+    @if (filteredUnits().length === 0) {
+      <div class="empty">
+        <p>No hay unidades que coincidan con los filtros.</p>
+      </div>
+    } @else {
+      <div class="units-grid">
+        @for (unit of filteredUnits(); track unit.id) {
+          <div class="unit-card">
+            <div class="unit-header">
+              <div class="unit-number">
+                <span class="label">Unidad</span>
+                <span class="number">{{ unit.unitNumber }}</span>
+              </div>
+              <span class="status-badge {{ statusColors[unit.status] }}">
+                {{ statusLabels[unit.status] }}
+              </span>
+            </div>
+
+            <div class="unit-info">
+              <div class="info-row">
+                <span class="info-label">🏢 Edificio</span>
+                <span>{{ unit.building.name }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">📐 Área</span>
+                <span>{{ unit.areaM2 }} m²</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">🏠 Piso</span>
+                <span>{{ unit.floor }}°</span>
+              </div>
+            </div>
+
+            <div class="unit-footer">
+              <span class="fee">Bs. {{ unit.monthlyFee }}/mes</span>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

@@ -1,0 +1,199 @@
+.units-page {
+  padding: 1rem 0;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.page-header h2 {
+  margin: 0 0 0.25rem 0;
+  color: #2c3e50;
+}
+
+.subtitle {
+  color: #6c757d;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.badge {
+  background: #e9ecef;
+  color: #6c757d;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+/* Filtros */
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filters select {
+  padding: 0.5rem 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #495057;
+  background: white;
+  cursor: pointer;
+}
+
+.filters select:focus {
+  outline: none;
+  border-color: #2c3e50;
+}
+
+.btn-clear {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  color: #6c757d;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.btn-clear:hover {
+  background: #f8f9fa;
+  color: #495057;
+}
+
+/* Grid */
+.units-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.unit-card {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.unit-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.unit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.unit-number {
+  display: flex;
+  flex-direction: column;
+}
+
+.unit-number .label {
+  font-size: 0.75rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.unit-number .number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  line-height: 1;
+}
+
+/* Status badges */
+.status-badge {
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-badge.available {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.sold {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status-badge.rented {
+  background: #fff3cd;
+  color: #856404;
+}
+
+/* Info */
+.unit-info {
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+.info-label {
+  color: #6c757d;
+}
+
+/* Footer */
+.unit-footer {
+  padding: 0.75rem 1.25rem;
+  background: #f8f9fa;
+  border-top: 1px solid #f0f0f0;
+}
+
+.fee {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.95rem;
+}
+
+/* Estados */
+.loading, .empty {
+  text-align: center;
+  padding: 3rem;
+  color: #6c757d;
+}
+
+.error-box {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  color: #721c24;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error-box button {
+  padding: 0.4rem 1rem;
+  background: #721c24;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
