@@ -1,1 +1,94 @@
-<p>residents works!</p>
+<div class="residents-page">
+  <div class="page-header">
+    <div>
+      <h2>Residentes</h2>
+      <p class="subtitle">Propietarios e inquilinos registrados</p>
+    </div>
+    <span class="badge">{{ filteredResidents().length }} residentes</span>
+  </div>
+
+  <!-- Búsqueda -->
+  <div class="search-bar">
+    <span class="search-icon">🔍</span>
+    <input
+      type="text"
+      placeholder="Buscar por nombre o DNI..."
+      [value]="search()"
+      (input)="updateSearch($event)"
+    />
+    @if (search()) {
+      <button class="btn-clear" (click)="search.set('')">✕</button>
+    }
+  </div>
+
+  <!-- Cargando -->
+  @if (loading()) {
+    <div class="loading">
+      <p>Cargando residentes...</p>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (error()) {
+    <div class="error-box">
+      <p>⚠️ {{ error() }}</p>
+      <button (click)="loadResidents()">Reintentar</button>
+    </div>
+  }
+
+  <!-- Lista -->
+  @if (!loading() && !error()) {
+    @if (filteredResidents().length === 0) {
+      <div class="empty">
+        <p>No se encontraron residentes con "{{ search() }}".</p>
+      </div>
+    } @else {
+      <div class="residents-list">
+        @for (resident of filteredResidents(); track resident.id) {
+          <div class="resident-card" [class.inactive]="!resident.isActive">
+
+            <!-- Avatar con iniciales -->
+            <div class="avatar" [class.inactive-avatar]="!resident.isActive">
+              {{ getInitials(resident.firstName, resident.lastName) }}
+            </div>
+
+            <!-- Info principal -->
+            <div class="resident-info">
+              <div class="resident-name">
+                {{ resident.firstName }} {{ resident.lastName }}
+                @if (!resident.isActive) {
+                  <span class="inactive-badge">Inactivo</span>
+                }
+              </div>
+              <div class="resident-details">
+                <span>🪪 {{ resident.dni }}</span>
+                <span>📧 {{ resident.email }}</span>
+                <span>📱 {{ resident.phone }}</span>
+              </div>
+            </div>
+
+            <!-- Unidad asignada -->
+            <div class="resident-unit">
+              @if (resident.unit) {
+                <span class="unit-label">Unidad</span>
+                <span class="unit-value">{{ resident.unit.unitNumber }}</span>
+                <span class="building-name">{{ resident.unit.building.name }}</span>
+              } @else {
+                <span class="no-unit">Sin unidad asignada</span>
+              }
+            </div>
+
+            <!-- Fecha de ingreso -->
+            <div class="resident-date">
+              <span class="date-label">Ingreso</span>
+              <span class="date-value">
+                {{ resident.moveInDate | date:'dd/MM/yyyy' }}
+              </span>
+            </div>
+
+          </div>
+        }
+      </div>
+    }
+  }
+</div>
