@@ -1,1 +1,127 @@
-<p>rentals works!</p>
+<div class="rentals-page">
+  <div class="page-header">
+    <div>
+      <h2>Alquileres</h2>
+      <p class="subtitle">Contratos de arrendamiento activos e históricos</p>
+    </div>
+    <span class="badge">{{ filteredRentals().length }} contratos</span>
+  </div>
+
+  <!-- Resumen financiero -->
+  @if (!loading() && !error() && rentals().length > 0) {
+    <div class="summary-cards">
+      <div class="summary-card debt">
+        <span class="summary-label">Deuda total pendiente</span>
+        <span class="summary-value">Bs. {{ totalDebt() | number:'1.2-2' }}</span>
+      </div>
+      <div class="summary-card credit">
+        <span class="summary-label">Saldo a favor total</span>
+        <span class="summary-value">Bs. {{ totalCreditBalance() | number:'1.2-2' }}</span>
+      </div>
+    </div>
+  }
+
+  <!-- Filtros por estado -->
+  <div class="filter-tabs">
+    <button
+      [class.active]="filter() === 'all'"
+      (click)="setFilter('all')">
+      Todos
+    </button>
+    <button
+      [class.active]="filter() === 'active'"
+      (click)="setFilter('active')">
+      Activos
+    </button>
+    <button
+      [class.active]="filter() === 'terminated'"
+      (click)="setFilter('terminated')">
+      Terminados
+    </button>
+  </div>
+
+  <!-- Cargando -->
+  @if (loading()) {
+    <div class="loading"><p>Cargando contratos...</p></div>
+  }
+
+  <!-- Error -->
+  @if (error()) {
+    <div class="error-box">
+      <p>⚠️ {{ error() }}</p>
+      <button (click)="loadRentals()">Reintentar</button>
+    </div>
+  }
+
+  <!-- Lista de contratos -->
+  @if (!loading() && !error()) {
+    @if (filteredRentals().length === 0) {
+      <div class="empty">
+        <p>No hay contratos con el filtro seleccionado.</p>
+      </div>
+    } @else {
+      <div class="rentals-list">
+        @for (rental of filteredRentals(); track rental.id) {
+          <div class="rental-card" [class.terminated]="rental.status !== 'Active'">
+
+            <!-- Encabezado -->
+            <div class="rental-header">
+              <div class="rental-title">
+                <span class="unit-badge">{{ rental.unitNumber }}</span>
+                <div>
+                  <div class="tenant-name">{{ rental.tenantName }}</div>
+                  <div class="building-name">{{ rental.buildingName }}</div>
+                </div>
+              </div>
+              <span class="status-badge" [class]="rental.status.toLowerCase()">
+                {{ getStatusLabel(rental.status) }}
+              </span>
+            </div>
+
+            <!-- Barra de progreso del contrato -->
+            <div class="progress-section">
+              <div class="progress-labels">
+                <span>{{ rental.startDate | date:'dd/MM/yyyy' }}</span>
+                <span>{{ rental.endDate | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="progress-bar">
+                <div
+                  class="progress-fill"
+                  [style.width.%]="getContractProgress(rental.startDate, rental.endDate)">
+                </div>
+              </div>
+              <span class="progress-pct">
+                {{ getContractProgress(rental.startDate, rental.endDate) }}% transcurrido
+              </span>
+            </div>
+
+            <!-- Datos financieros -->
+            <div class="rental-financials">
+              <div class="financial-item">
+                <span class="fin-label">Renta mensual</span>
+                <span class="fin-value">Bs. {{ rental.monthlyRent | number:'1.2-2' }}</span>
+              </div>
+              <div class="financial-item">
+                <span class="fin-label">Depósito</span>
+                <span class="fin-value">Bs. {{ rental.depositAmount | number:'1.2-2' }}</span>
+              </div>
+              <div class="financial-item" [class.has-debt]="rental.totalDebt > 0">
+                <span class="fin-label">Deuda pendiente</span>
+                <span class="fin-value">
+                  {{ rental.pendingMonths }} mes(es) — Bs. {{ rental.totalDebt | number:'1.2-2' }}
+                </span>
+              </div>
+              @if (rental.creditBalance > 0) {
+                <div class="financial-item has-credit">
+                  <span class="fin-label">Saldo a favor</span>
+                  <span class="fin-value">Bs. {{ rental.creditBalance | number:'1.2-2' }}</span>
+                </div>
+              }
+            </div>
+
+          </div>
+        }
+      </div>
+    }
+  }
+</div>
