@@ -1,48 +1,49 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BuildingService } from '../../core/services/building';
-import { Building } from '../../core/interfaces/building.interface';
+import { HttpClient } from '@angular/common/http';
+import { Modal } from '../../shared/modal/modal';
+import { BuildingForm } from './building-form/building-form';
+
+interface Building {
+  id: number
+  name: string
+  address: string
+  city: string
+  totalUnits: number
+  isActive: boolean
+}
 
 @Component({
   selector: 'app-buildings',
   templateUrl: './buildings.html',
   styleUrl: './buildings.css',
-  imports: [CommonModule]
+  imports: [CommonModule, Modal, BuildingForm]
 })
 export class Buildings implements OnInit {
-  private buildingService = inject(BuildingService)
 
   buildings = signal<Building[]>([])
-  selectedBuilding = signal<Building | null>(null)
-  isLoading = signal(true)
-  errorMessage = signal('')
+  loading = signal(true)
+  error = signal<string | null>(null)
+  showModal = signal(false)
+
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {
     this.loadBuildings()
   }
 
   loadBuildings() {
-    this.isLoading.set(true)
-    this.errorMessage.set('')
+    this.loading.set(true)
+    this.error.set(null)
 
-    this.buildingService.getAll().subscribe({
-      next: (data) => {
-        this.buildings.set(data)
-        this.isLoading.set(false)
-      },
-      error: (err) => {
-        this.errorMessage.set('No se pudo conectar con el servidor. Verifica que la API esté corriendo.')
-        this.isLoading.set(false)
-        console.error(err)
-      }
+    this.http.get<Building[]>('http://localhost:5065/api/building').subscribe({
+      next: (data) => {this.buildings.set(data); this.loading.set(false) },
+      error: (err) => {this.error.set('No se pudieron cargar los edificios'); this.loading.set(false) }
     })
   }
 
-  selectBuilding(building: Building) {
-    this.selectedBuilding.set(building)
-  }
-
-  clearSelection() {
-    this.selectedBuilding.set(null)
+  onBuildingSaved() {
+    this.showModal.set(false)
+    this.loadBuildings()
   }
 }

@@ -1,35 +1,32 @@
 <div class="buildings-page">
   <div class="page-header">
-    <h2>Edificios</h2>
-    @if (!isLoading()) {
+    <div>
+      <h2>Edificios</h2>
+      <p class="subtitle">Gestión de edificios del condominio</p>
+    </div>
+    <div class="header-actions">
       <span class="badge">{{ buildings().length }} registros</span>
-    }
+      <button class="btn-new" (click)="showModal.set(true)">
+        + Nuevo edificio
+      </button>
+    </div>
   </div>
 
-  <!-- Estado: cargando -->
-  @if (isLoading()) {
-    <div class="loading">
-      <span>⏳ Cargando edificios...</span>
-    </div>
+  @if (loading()) {
+    <div class="loading"><p>Cargando edificios...</p></div>
   }
 
-  <!-- Estado: error -->
-  @if (errorMessage()) {
-    <div class="error-banner">
-      <span>⚠️ {{ errorMessage() }}</span>
+  @if (error()) {
+    <div class="error-box">
+      <p>⚠️ {{ error() }}</p>
       <button (click)="loadBuildings()">Reintentar</button>
     </div>
   }
 
-  <!-- Estado: datos cargados -->
-  @if (!isLoading() && !errorMessage()) {
+  @if (!loading() && !error()) {
     <div class="buildings-grid">
       @for (building of buildings(); track building.id) {
-        <div
-          class="building-card"
-          [class.inactive]="!building.isActive"
-          (click)="selectBuilding(building)"
-        >
+        <div class="building-card" [class.inactive]="!building.isActive">
           <div class="building-header">
             <h3>{{ building.name }}</h3>
             @if (building.isActive) {
@@ -45,20 +42,18 @@
         </div>
       }
     </div>
-
-    @if (selectedBuilding()) {
-      <div class="detail-panel">
-        <div class="detail-header">
-          <h3>{{ selectedBuilding()!.name }}</h3>
-          <button (click)="clearSelection()">✕ Cerrar</button>
-        </div>
-        <div class="detail-body">
-          <p><strong>Dirección:</strong> {{ selectedBuilding()!.address }}</p>
-          <p><strong>Ciudad:</strong> {{ selectedBuilding()!.city }}</p>
-          <p><strong>Total unidades:</strong> {{ selectedBuilding()!.totalUnits }}</p>
-          <p><strong>Estado:</strong> {{ selectedBuilding()!.isActive ? 'Activo' : 'Inactivo' }}</p>
-        </div>
-      </div>
-    }
   }
 </div>
+
+<!-- Modal con el formulario -->
+<app-modal
+  title="Nuevo edificio"
+  [isOpen]="showModal()"
+  (closed)="showModal.set(false)">
+
+  <app-building-form
+    (saved)="onBuildingSaved()"
+    (cancel)="showModal.set(false)">
+  </app-building-form>
+
+</app-modal>
