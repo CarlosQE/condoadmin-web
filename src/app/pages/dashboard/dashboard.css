@@ -1,4 +1,4 @@
-.dashboard {
+.dashboard-page {
   padding: 1rem 0;
 }
 
@@ -12,26 +12,25 @@
 .page-header h2 {
   margin: 0 0 0.25rem 0;
   color: #2c3e50;
-  font-size: 1.75rem;
+  font-size: 1.8rem;
 }
 
 .subtitle {
-  margin: 0;
   color: #6c757d;
+  margin: 0;
 }
 
-.date {
+.city {
   color: #6c757d;
   font-size: 0.9rem;
-  padding-top: 0.5rem;
 }
 
-/* ── Stats grid ─────────────────────────── */
+/* Stats */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .stat-card {
@@ -45,12 +44,11 @@
   text-decoration: none;
   color: inherit;
   transition: all 0.2s;
-  cursor: pointer;
 }
 
 .stat-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
   border-color: #adb5bd;
 }
 
@@ -66,93 +64,157 @@
 }
 
 .stat-info {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  flex: 1;
 }
 
 .stat-value {
-  font-size: 1.75rem;
+  font-size: 1.8rem;
   font-weight: 700;
   color: #2c3e50;
   line-height: 1;
 }
 
 .stat-label {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #495057;
+  margin-top: 0.2rem;
+}
+
+.stat-sub {
+  font-size: 0.78rem;
   color: #6c757d;
-  margin-top: 0.25rem;
+  margin-top: 0.2rem;
 }
 
 .stat-arrow {
   color: #adb5bd;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
 }
 
-/* ── Actividad reciente ─────────────────── */
-.recent-section h3 {
-  color: #2c3e50;
-  margin: 0 0 1rem 0;
+/* Alertas */
+.alerts-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
 }
 
-.activity-list {
-  background: white;
-  border: 1px solid #dee2e6;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.activity-item {
+.alert-card {
   display: flex;
   align-items: center;
   gap: 1rem;
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid #f0f0f0;
-  transition: background 0.15s;
+  border-radius: 8px;
 }
 
-.activity-item:last-child {
-  border-bottom: none;
+.alert-card.warning {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
 }
 
-.activity-item:hover {
-  background: #f8f9fa;
+.alert-card.info {
+  background: #d1ecf1;
+  border: 1px solid #17a2b8;
 }
 
-.activity-icon {
+.alert-card.success {
+  background: #d4edda;
+  border: 1px solid #28a745;
+}
+
+.alert-icon {
   font-size: 1.5rem;
-  flex-shrink: 0;
 }
 
-.activity-info {
-  flex: 1;
+.alert-info {
+  display: flex;
+  flex-direction: column;
 }
 
-.activity-desc {
-  margin: 0 0 0.2rem 0;
+.alert-title {
+  font-weight: 600;
   color: #2c3e50;
   font-size: 0.95rem;
 }
 
-.activity-date {
-  font-size: 0.8rem;
-  color: #adb5bd;
+.alert-detail {
+  font-size: 0.85rem;
+  color: #495057;
 }
 
-.activity-status {
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  flex-shrink: 0;
+/* Ocupación */
+.occupancy-section {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
 }
 
-.activity-status.completed {
-  background: #d4edda;
-  color: #155724;
+.occupancy-section h3 {
+  margin: 0 0 1rem 0;
+  color: #2c3e50;
+  font-size: 1rem;
 }
 
-.activity-status.pending {
-  background: #fff3cd;
-  color: #856404;
+.occupancy-bar {
+  height: 12px;
+  background: #e9ecef;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  margin-bottom: 0.75rem;
+}
+
+.bar-sold {
+  background: #e74c3c;
+  height: 100%;
+  transition: width 0.5s;
+}
+
+.bar-rented {
+  background: #f39c12;
+  height: 100%;
+  transition: width 0.5s;
+}
+
+.occupancy-legend {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot.sold      { background: #e74c3c; }
+.dot.rented    { background: #f39c12; }
+.dot.available { background: #e9ecef; border: 1px solid #adb5bd; }
+
+/* Estados */
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #6c757d;
+}
+
+.error-box {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  color: #721c24;
 }

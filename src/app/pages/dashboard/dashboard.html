@@ -1,49 +1,139 @@
-<div class="dashboard">
+<div class="dashboard-page">
   <div class="page-header">
     <div>
       <h2>Dashboard</h2>
       <p class="subtitle">Bienvenido al sistema de administración</p>
     </div>
-    <span class="date">La Paz, Bolivia</span>
+    <span class="city">{{ city }}</span>
   </div>
 
-  <!-- Tarjetas de estadísticas -->
-  <div class="stats-grid">
-    @for (stat of stats; track stat.label) {
-      <a class="stat-card" [routerLink]="stat.route">
-        <div class="stat-icon" [style.background]="stat.color + '20'"
-             [style.color]="stat.color">
-          {{ stat.icon }}
-        </div>
+  @if (loading()) {
+    <div class="loading"><p>Cargando datos...</p></div>
+  }
+
+  @if (error()) {
+    <div class="error-box">⚠️ {{ error() }}</div>
+  }
+
+  @if (data(); as d) {
+    <!-- Tarjetas de estadísticas -->
+    <div class="stats-grid">
+
+      <a routerLink="/buildings" class="stat-card">
+        <div class="stat-icon" style="background:#ebf5fb">🏢</div>
         <div class="stat-info">
-          <span class="stat-value">{{ stat.value }}</span>
-          <span class="stat-label">{{ stat.label }}</span>
+          <span class="stat-value">{{ d.buildings.total }}</span>
+          <span class="stat-label">Edificios</span>
+          <span class="stat-sub">{{ d.buildings.active }} activos</span>
         </div>
         <span class="stat-arrow">→</span>
       </a>
-    }
-  </div>
 
-  <!-- Actividad reciente -->
-  <div class="recent-section">
-    <h3>Actividad reciente</h3>
-
-    <div class="activity-list">
-      @for (activity of recentActivity; track activity.id) {
-        <div class="activity-item">
-          <span class="activity-icon">{{ getActivityIcon(activity.type) }}</span>
-
-          <div class="activity-info">
-            <p class="activity-desc">{{ activity.description }}</p>
-            <span class="activity-date">{{ activity.date }}</span>
-          </div>
-
-          <span class="activity-status" [class.pending]="activity.status === 'pending'"
-                [class.completed]="activity.status === 'completed'">
-            {{ activity.status === 'completed' ? 'Completado' : 'Pendiente' }}
+      <a routerLink="/units" class="stat-card">
+        <div class="stat-icon" style="background:#eafaf1">🏠</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ d.units.total }}</span>
+          <span class="stat-label">Unidades</span>
+          <span class="stat-sub">
+            {{ d.units.available }} disponibles · {{ d.units.rented }} alquiladas
           </span>
         </div>
-      }
+        <span class="stat-arrow">→</span>
+      </a>
+
+      <a routerLink="/residents" class="stat-card">
+        <div class="stat-icon" style="background:#fef9e7">👤</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ d.residents.total }}</span>
+          <span class="stat-label">Residentes</span>
+          <span class="stat-sub">{{ d.residents.active }} activos</span>
+        </div>
+        <span class="stat-arrow">→</span>
+      </a>
+
+      <a routerLink="/rentals" class="stat-card">
+        <div class="stat-icon" style="background:#f5eef8">📋</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ d.units.rented }}</span>
+          <span class="stat-label">Contratos activos</span>
+          <span class="stat-sub">{{ d.units.available }} unidades libres</span>
+        </div>
+        <span class="stat-arrow">→</span>
+      </a>
+
     </div>
-  </div>
+
+    <!-- Alertas de gestión -->
+    <div class="alerts-grid">
+
+      @if (d.payments.pendingCount > 0) {
+        <div class="alert-card warning">
+          <span class="alert-icon">💳</span>
+          <div class="alert-info">
+            <span class="alert-title">Pagos pendientes</span>
+            <span class="alert-detail">
+              {{ d.payments.pendingCount }} cuotas vencidas —
+              Bs. {{ d.payments.totalDebt | number:'1.2-2' }}
+            </span>
+          </div>
+        </div>
+      }
+
+      @if (d.maintenance.pendingCount > 0) {
+        <div class="alert-card info">
+          <span class="alert-icon">🔧</span>
+          <div class="alert-info">
+            <span class="alert-title">Mantenimiento pendiente</span>
+            <span class="alert-detail">
+              {{ d.maintenance.pendingCount }} solicitudes sin resolver
+            </span>
+          </div>
+        </div>
+      }
+
+      @if (d.payments.pendingCount === 0 && d.maintenance.pendingCount === 0) {
+        <div class="alert-card success">
+          <span class="alert-icon">✅</span>
+          <div class="alert-info">
+            <span class="alert-title">Todo al día</span>
+            <span class="alert-detail">Sin pagos ni mantenimientos pendientes</span>
+          </div>
+        </div>
+      }
+
+    </div>
+
+    <!-- Resumen de ocupación -->
+    <div class="occupancy-section">
+      <h3>Ocupación de unidades</h3>
+      <div class="occupancy-bar-container">
+        <div class="occupancy-bar">
+          <div
+            class="bar-sold"
+            [style.width.%]="(d.units.sold / d.units.total) * 100"
+            title="Vendidas">
+          </div>
+          <div
+            class="bar-rented"
+            [style.width.%]="(d.units.rented / d.units.total) * 100"
+            title="Alquiladas">
+          </div>
+        </div>
+        <div class="occupancy-legend">
+          <span class="legend-item">
+            <span class="dot sold"></span>
+            Vendidas ({{ d.units.sold }})
+          </span>
+          <span class="legend-item">
+            <span class="dot rented"></span>
+            Alquiladas ({{ d.units.rented }})
+          </span>
+          <span class="legend-item">
+            <span class="dot available"></span>
+            Disponibles ({{ d.units.available }})
+          </span>
+        </div>
+      </div>
+    </div>
+  }
 </div>
