@@ -1,25 +1,16 @@
-import { Component, OnInit, signal, computed } from '@angular/core'
-import { CommonModule } from '@angular/common'
-import { HttpClient } from '@angular/common/http'
-import { FormsModule } from '@angular/forms'
+import { Component, OnInit, signal, computed } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
+// Interface actualizada para coincidir con ListResidentsOutput del backend
 interface Resident {
   id: number
-  firstName: string 
-  lastName: string
-  email: string
-  phone: string
+  fullName: string
   dni: string
-  moveInDate: string
-  moveOutDate: string | null
-  isActive: boolean
-  unitId: number | null 
-  unit: {
-    unitNumber: string
-    building: {
-      name: string
-    }
-  } | null
+  phone: string
+  email: string
+  unitNumber: string  // "Sin unidad" si no tiene
 }
 
 @Component({
@@ -28,54 +19,57 @@ interface Resident {
   styleUrl: './residents.css',
   imports: [CommonModule, FormsModule]
 })
-
 export class Residents implements OnInit {
 
   residents = signal<Resident[]>([])
-  loading = signal(true)
-  error = signal<string | null>(null)
-  search = signal('')
+  loading   = signal(true)
+  error     = signal<string | null>(null)
+  search    = signal('')
 
   filteredResidents = computed(() => {
     const term = this.search().toLowerCase().trim()
     if (!term) return this.residents()
 
-    return this.residents().filter(r => 
-      r.firstName.toLowerCase().includes(term) ||
-      r.lastName.toLowerCase().includes(term) ||
-      r.email.toLowerCase().includes(term) ||
+    return this.residents().filter(r =>
+      r.fullName.toLowerCase().includes(term) ||
       r.dni.includes(term)
     )
   })
 
-constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
-ngOnInit() {
-  this.loadResidents()
-}
+  ngOnInit() {
+    this.loadResidents()
+  }
 
-loadResidents() {
-  this.loading.set(true)
-  this.error.set(null)
+  loadResidents() {
+    this.loading.set(true)
+    this.error.set(null)
 
-  this.http.get<Resident[]>('http://localhost:5065/api/resident').subscribe({
-    next: (data) => {
-      this.residents.set(data)
-      this.loading.set(false)
-    },
-    error: (err) => {
-      this.error.set('No se pudieron cargar los residentes.')
-      this.loading.set(false)
-      console.error(err)
-    }      
-  })
-}
+    this.http.get<Resident[]>('http://localhost:5065/api/resident').subscribe({
+      next: (data) => {
+        this.residents.set(data)
+        this.loading.set(false)
+      },
+      error: (err) => {
+        this.error.set('No se pudieron cargar los residentes.')
+        this.loading.set(false)
+        console.error(err)
+      }
+    })
+  }
 
-updateSearch(event: Event) {
-  this.search.set((event.target as HTMLInputElement).value)
-}
+  updateSearch(event: Event) {
+    this.search.set((event.target as HTMLInputElement).value)
+  }
 
-getInitials(firstName: string, lastName: string): string {
-  return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
+  // Extrae iniciales del fullName — toma primera letra de cada palabra
+  getInitials(fullName: string): string {
+    return fullName
+      .split(' ')
+      .slice(0, 2)
+      .map(n => n.charAt(0))
+      .join('')
+      .toUpperCase()
   }
 }
