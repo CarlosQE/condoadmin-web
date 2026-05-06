@@ -2,6 +2,8 @@ import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { Modal } from '../../shared/modal/modal';
+import { RentalForm } from './rental-form/rental-form';
 
 interface Rental {
   id: number
@@ -23,14 +25,15 @@ interface Rental {
   selector: 'app-rentals',
   templateUrl: './rentals.html',
   styleUrl: './rentals.css',
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, Modal, RentalForm]
 })
 export class Rentals implements OnInit {
 
-  rentals = signal<Rental[]>([])
-  loading = signal(true)
-  error   = signal<string | null>(null)
-  filter  = signal<string>('all')  // all | active | terminated
+  rentals       = signal<Rental[]>([])
+  loading       = signal(true)
+  error         = signal<string | null>(null)
+  filter        = signal<string>('all')
+  showModal     = signal(false)
 
   filteredRentals = computed(() => {
     const f = this.filter()
@@ -40,7 +43,6 @@ export class Rentals implements OnInit {
     )
   })
 
-  // Totales calculados del lado del cliente
   totalDebt = computed(() =>
     this.rentals()
       .filter(r => r.status === 'Active')
@@ -68,10 +70,9 @@ export class Rentals implements OnInit {
         this.rentals.set(data)
         this.loading.set(false)
       },
-      error: (err) => {
-        this.error.set('No se pudieron cargar los contratos de alquiler.')
+      error: () => {
+        this.error.set('No se pudieron cargar los contratos.')
         this.loading.set(false)
-        console.error(err)
       }
     })
   }
@@ -80,7 +81,11 @@ export class Rentals implements OnInit {
     this.filter.set(f)
   }
 
-  // Calcula el porcentaje del contrato transcurrido para la barra de progreso
+  onRentalSaved() {
+    this.showModal.set(false)
+    this.loadRentals()
+  }
+
   getContractProgress(startDate: string, endDate: string): number {
     const start = new Date(startDate).getTime()
     const end   = new Date(endDate).getTime()

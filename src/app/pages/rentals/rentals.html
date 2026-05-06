@@ -4,7 +4,12 @@
       <h2>Alquileres</h2>
       <p class="subtitle">Contratos de arrendamiento activos e históricos</p>
     </div>
-    <span class="badge">{{ filteredRentals().length }} contratos</span>
+    <div class="header-actions">
+      <span class="badge">{{ filteredRentals().length }} contratos</span>
+      <button class="btn-new" (click)="showModal.set(true)">
+        📋 Nuevo contrato
+      </button>
+    </div>
   </div>
 
   <!-- Resumen financiero -->
@@ -21,31 +26,17 @@
     </div>
   }
 
-  <!-- Filtros por estado -->
+  <!-- Filtros -->
   <div class="filter-tabs">
-    <button
-      [class.active]="filter() === 'all'"
-      (click)="setFilter('all')">
-      Todos
-    </button>
-    <button
-      [class.active]="filter() === 'active'"
-      (click)="setFilter('active')">
-      Activos
-    </button>
-    <button
-      [class.active]="filter() === 'terminated'"
-      (click)="setFilter('terminated')">
-      Terminados
-    </button>
+    <button [class.active]="filter() === 'all'"        (click)="setFilter('all')">Todos</button>
+    <button [class.active]="filter() === 'active'"     (click)="setFilter('active')">Activos</button>
+    <button [class.active]="filter() === 'terminated'" (click)="setFilter('terminated')">Terminados</button>
   </div>
 
-  <!-- Cargando -->
   @if (loading()) {
     <div class="loading"><p>Cargando contratos...</p></div>
   }
 
-  <!-- Error -->
   @if (error()) {
     <div class="error-box">
       <p>⚠️ {{ error() }}</p>
@@ -53,7 +44,6 @@
     </div>
   }
 
-  <!-- Lista de contratos -->
   @if (!loading() && !error()) {
     @if (filteredRentals().length === 0) {
       <div class="empty">
@@ -64,7 +54,6 @@
         @for (rental of filteredRentals(); track rental.id) {
           <div class="rental-card" [class.terminated]="rental.status !== 'Active'">
 
-            <!-- Encabezado -->
             <div class="rental-header">
               <div class="rental-title">
                 <span class="unit-badge">{{ rental.unitNumber }}</span>
@@ -78,15 +67,13 @@
               </span>
             </div>
 
-            <!-- Barra de progreso del contrato -->
             <div class="progress-section">
               <div class="progress-labels">
                 <span>{{ rental.startDate | date:'dd/MM/yyyy' }}</span>
                 <span>{{ rental.endDate | date:'dd/MM/yyyy' }}</span>
               </div>
               <div class="progress-bar">
-                <div
-                  class="progress-fill"
+                <div class="progress-fill"
                   [style.width.%]="getContractProgress(rental.startDate, rental.endDate)">
                 </div>
               </div>
@@ -95,7 +82,6 @@
               </span>
             </div>
 
-            <!-- Datos financieros -->
             <div class="rental-financials">
               <div class="financial-item">
                 <span class="fin-label">Renta mensual</span>
@@ -125,3 +111,16 @@
     }
   }
 </div>
+
+<!-- Modal de nuevo contrato -->
+<app-modal
+  title="Nuevo contrato de alquiler"
+  [isOpen]="showModal()"
+  (closed)="showModal.set(false)">
+
+  <app-rental-form
+    (saved)="onRentalSaved()"
+    (cancel)="showModal.set(false)">
+  </app-rental-form>
+
+</app-modal>
