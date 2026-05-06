@@ -41,12 +41,22 @@ export class Rentals implements OnInit {
   selectedRental: Rental | null = null
 
   filteredRentals = computed(() => {
-    const f = this.filter()
-    if (f === 'all') return this.rentals()
+  const f = this.filter()
+  if (f === 'all') return this.rentals()
+  if (f === 'terminated') {
     return this.rentals().filter(r =>
-      r.status.toLowerCase() === f.toLowerCase()
+      r.status.toLowerCase() === 'terminated' ||
+      r.status.toLowerCase() === 'cancelled' ||
+      (r.status === 'Active' && new Date(r.endDate) < new Date())
     )
-  })
+  }
+  if (f === 'active') {
+    return this.rentals().filter(r =>
+      r.status === 'Active' && new Date(r.endDate) >= new Date()
+    )
+  }
+  return this.rentals()
+})
 
   totalDebt = computed(() =>
     this.rentals()
@@ -114,12 +124,18 @@ export class Rentals implements OnInit {
     return Math.round(((now - start) / (end - start)) * 100)
   }
 
-  getStatusLabel(status: string): string {
-    const labels: Record<string, string> = {
-      'Active':     'Activo',
-      'Terminated': 'Terminado',
-      'Cancelled':  'Cancelado'
-    }
-    return labels[status] ?? status
+  getStatusLabel(status: string, endDate: string): string {
+  if (status === 'Active' && new Date(endDate) < new Date()) {
+    return 'Vencido'
   }
+  const labels: Record<string, string> = {
+    'Active':     'Activo',
+    'Terminated': 'Terminado',
+    'Cancelled':  'Cancelado'
+  }
+  return labels[status] ?? status
+}
+isExpired(status: string, endDate: string): boolean {
+  return status === 'Active' && new Date(endDate) < new Date()
+}
 }

@@ -62,15 +62,18 @@
                 </div>
               </div>
               <div class="rental-header-right">
-                <span class="status-badge" [class]="rental.status.toLowerCase()">
-                  {{ getStatusLabel(rental.status) }}
-                </span>
-                @if (rental.status === 'Active') {
-                  <button class="btn-pay" (click)="openPayment(rental)">
-                    <span class="material-icons-round">payments</span>
-                    Registrar pago
-                  </button>
-                }
+                <!-- El status badge — cambia la línea del [class] y el texto -->
+<span class="status-badge" [class]="isExpired(rental.status, rental.endDate) ? 'expired' : rental.status.toLowerCase()">
+  {{ getStatusLabel(rental.status, rental.endDate) }}
+</span>
+
+<!-- El botón de pago — ocultarlo si está vencido -->
+@if (rental.status === 'Active' && !isExpired(rental.status, rental.endDate)) {
+  <button class="btn-pay" (click)="openPayment(rental)">
+    <span class="material-icons-round">payments</span>
+    Registrar pago
+  </button>
+}
               </div>
             </div>
 
