@@ -2,21 +2,18 @@ import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { Modal } from '../../shared/modal/modal';
+import { SaleForm } from './sale-form/sale-form';
 
-// Espeja el DTO del backend
 interface Unit {
   id: number
   unitNumber: string
   floor: number
   areaM2: number
   monthlyFee: number
-  status: number        // 0=Available, 1=Sold, 2=Rented
+  status: string        // ← string ahora
   buildingId: number
-  building: {
-    id: number
-    name: string
-    city: string
-  }
+  buildingName: string  // ← string directo
 }
 
 interface Building {
@@ -28,50 +25,46 @@ interface Building {
   selector: 'app-units',
   templateUrl: './units.html',
   styleUrl: './units.css',
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, Modal, SaleForm]
 })
 export class Units implements OnInit {
 
-  // Signals — forma moderna de manejar estado en Angular 21
-  units    = signal<Unit[]>([])
+  units     = signal<Unit[]>([])
   buildings = signal<Building[]>([])
-  loading  = signal(true)
-  error    = signal<string | null>(null)
+  loading   = signal(true)
+  error     = signal<string | null>(null)
+  showSaleModal = signal(false)
 
-  // Filtros
   selectedBuildingId = signal<number | null>(null)
-  selectedStatus     = signal<number | null>(null)
+selectedStatus     = signal<string | null>(null)
 
-  // computed — se recalcula automáticamente cuando cambian los signals
-  // Aplica los filtros activos sobre la lista completa
   filteredUnits = computed(() => {
-    let result = this.units()
+  let result = this.units()
 
-    const buildingId = this.selectedBuildingId()
-    if (buildingId !== null) {
-      result = result.filter(u => u.buildingId === buildingId)
-    }
-
-    const status = this.selectedStatus()
-    if (status !== null) {
-      result = result.filter(u => u.status === status)
-    }
-
-    return result
-  })
-
-  // Labels para los estados del enum UnitStatus del backend
-  statusLabels: Record<number, string> = {
-    0: 'Disponible',
-    1: 'Vendida',
-    2: 'Alquilada'
+  const buildingId = this.selectedBuildingId()
+  if (buildingId !== null) {
+    result = result.filter(u => u.buildingId === buildingId)
   }
 
-  statusColors: Record<number, string> = {
-    0: 'available',
-    1: 'sold',
-    2: 'rented'
+  const status = this.selectedStatus()
+  if (status !== null) {
+    result = result.filter(u => u.status === status)
   }
+
+  return result
+})
+
+  statusLabels: Record<string, string> = {
+  'Available': 'Disponible',
+  'Sold':      'Vendida',
+  'Rented':    'Alquilada'
+}
+
+statusColors: Record<string, string> = {
+  'Available': 'available',
+  'Sold':      'sold',
+  'Rented':    'rented'
+}
 
   constructor(private http: HttpClient) {}
 
@@ -89,10 +82,9 @@ export class Units implements OnInit {
         this.units.set(data)
         this.loading.set(false)
       },
-      error: (err) => {
-        this.error.set('No se pudieron cargar las unidades. Verifica que la API esté corriendo.')
+      error: () => {
+        this.error.set('No se pudieron cargar las unidades.')
         this.loading.set(false)
-        console.error(err)
       }
     })
   }
@@ -104,19 +96,25 @@ export class Units implements OnInit {
     })
   }
 
-  // Métodos para los filtros
   filterByBuilding(event: Event) {
-    const value = (event.target as HTMLSelectElement).value
-    this.selectedBuildingId.set(value === '' ? null : Number(value))
-  }
+  const value = (event.target as HTMLSelectElement).value
+  this.selectedBuildingId.set(value === '' ? null : Number(value))
+}
 
-  filterByStatus(event: Event) {
-    const value = (event.target as HTMLSelectElement).value
-    this.selectedStatus.set(value === '' ? null : Number(value))
-  }
+filterByStatus(event: Event) {
+  const value = (event.target as HTMLSelectElement).value
+  this.selectedStatus.set(value === '' ? null : value)
+}
 
   clearFilters() {
-    this.selectedBuildingId.set(null)
-    this.selectedStatus.set(null)
+  this.selectedBuildingId.set(null)
+  this.selectedStatus.set(null)
+}
+
+  // Al guardar la venta recargamos las unidades
+  // para que las vendidas cambien su estado visualmente
+  onSaleSaved() {
+    this.showSaleModal.set(false)
+    this.loadUnits()
   }
 }

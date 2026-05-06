@@ -197,3 +197,25 @@
   border-radius: 4px;
   cursor: pointer;
 }
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-new {
+  padding: 0.5rem 1.25rem;
+  background: #2c3e50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-new:hover {
+  background: #1a252f;
+}

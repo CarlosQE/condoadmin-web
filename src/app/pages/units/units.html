@@ -4,7 +4,12 @@
       <h2>Unidades</h2>
       <p class="subtitle">Gestión de unidades por edificio</p>
     </div>
-    <span class="badge">{{ filteredUnits().length }} unidades</span>
+    <div class="header-actions">
+      <span class="badge">{{ filteredUnits().length }} unidades</span>
+      <button class="btn-new" (click)="showSaleModal.set(true)">
+        💰 Registrar venta
+      </button>
+    </div>
   </div>
 
   <!-- Filtros -->
@@ -17,11 +22,11 @@
     </select>
 
     <select (change)="filterByStatus($event)">
-      <option value="">Todos los estados</option>
-      <option value="0">Disponible</option>
-      <option value="1">Vendida</option>
-      <option value="2">Alquilada</option>
-    </select>
+  <option value="">Todos los estados</option>
+  <option value="Available">Disponible</option>
+  <option value="Sold">Vendida</option>
+  <option value="Rented">Alquilada</option>
+</select>
 
     @if (selectedBuildingId() !== null || selectedStatus() !== null) {
       <button class="btn-clear" (click)="clearFilters()">
@@ -32,9 +37,7 @@
 
   <!-- Estado de carga -->
   @if (loading()) {
-    <div class="loading">
-      <p>Cargando unidades...</p>
-    </div>
+    <div class="loading"><p>Cargando unidades...</p></div>
   }
 
   <!-- Error -->
@@ -67,9 +70,9 @@
 
             <div class="unit-info">
               <div class="info-row">
-                <span class="info-label">🏢 Edificio</span>
-                <span>{{ unit.building.name }}</span>
-              </div>
+  <span class="info-label">🏢 Edificio</span>
+  <span>{{ unit.buildingName }}</span>
+</div>
               <div class="info-row">
                 <span class="info-label">📐 Área</span>
                 <span>{{ unit.areaM2 }} m²</span>
@@ -89,3 +92,16 @@
     }
   }
 </div>
+
+<!-- Modal de venta -->
+<app-modal
+  title="Registrar venta"
+  [isOpen]="showSaleModal()"
+  (closed)="showSaleModal.set(false)">
+
+  <app-sale-form
+    (saved)="onSaleSaved()"
+    (cancel)="showSaleModal.set(false)">
+  </app-sale-form>
+
+</app-modal>
