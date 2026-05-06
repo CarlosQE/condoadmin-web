@@ -37,24 +37,24 @@ export class Units implements OnInit {
   showSaleModal = signal(false)
   showUnitModal = signal(false)
 
-  selectedBuildingId = signal<number | null>(null)
+  selectedBuildingName = signal<string | null>(null)
   selectedStatus     = signal<string | null>(null)
 
   filteredUnits = computed(() => {
-    let result = this.units()
+  let result = this.units()
 
-    const buildingId = this.selectedBuildingId()
-    if (buildingId !== null) {
-      result = result.filter(u => u.buildingId === buildingId)
-    }
+  const buildingName = this.selectedBuildingName()
+  if (buildingName !== null) {
+    result = result.filter(u => u.buildingName === buildingName)
+  }
 
-    const status = this.selectedStatus()
-    if (status !== null) {
-      result = result.filter(u => u.status === status)
-    }
+  const status = this.selectedStatus()
+  if (status !== null) {
+    result = result.filter(u => u.status === status)
+  }
 
-    return result
-  })
+  return result
+})
 
   statusLabels: Record<string, string> = {
     'Available': 'Disponible',
@@ -76,20 +76,19 @@ export class Units implements OnInit {
   }
 
   loadUnits() {
-    this.loading.set(true)
-    this.error.set(null)
-
-    this.http.get<Unit[]>('http://localhost:5065/api/unit').subscribe({
-      next: (data) => {
-        this.units.set(data)
-        this.loading.set(false)
-      },
-      error: () => {
-        this.error.set('No se pudieron cargar las unidades.')
-        this.loading.set(false)
-      }
-    })
-  }
+  this.loading.set(true)
+  this.http.get<Unit[]>('http://localhost:5065/api/unit').subscribe({
+    next: (data) => {
+      console.log('Unidades:', data.map(u => ({ num: u.unitNumber, buildingId: u.buildingId, buildingName: u.buildingName })))
+      this.units.set(data)
+      this.loading.set(false)
+    },
+    error: () => {
+      this.error.set('No se pudieron cargar las unidades.')
+      this.loading.set(false)
+    }
+  })
+}
 
   loadBuildings() {
     this.http.get<Building[]>('http://localhost:5065/api/building').subscribe({
@@ -99,9 +98,9 @@ export class Units implements OnInit {
   }
 
   filterByBuilding(event: Event) {
-    const value = (event.target as HTMLSelectElement).value
-    this.selectedBuildingId.set(value === '' ? null : Number(value))
-  }
+  const value = (event.target as HTMLSelectElement).value
+  this.selectedBuildingName.set(value === '' ? null : value)
+}
 
   filterByStatus(event: Event) {
     const value = (event.target as HTMLSelectElement).value
@@ -109,9 +108,9 @@ export class Units implements OnInit {
   }
 
   clearFilters() {
-    this.selectedBuildingId.set(null)
-    this.selectedStatus.set(null)
-  }
+  this.selectedBuildingName.set(null)
+  this.selectedStatus.set(null)
+}
 
   onSaleSaved() {
     this.showSaleModal.set(false)

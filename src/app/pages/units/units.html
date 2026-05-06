@@ -7,20 +7,21 @@
     <div class="header-actions">
       <span class="badge">{{ filteredUnits().length }} unidades</span>
       <button class="btn-secondary" (click)="showUnitModal.set(true)">
-        + Nueva unidad
+        <span class="material-icons-round" style="font-size:1rem">add</span>
+        Nueva unidad
       </button>
       <button class="btn-new" (click)="showSaleModal.set(true)">
-        💰 Registrar venta
+        <span class="material-icons-round" style="font-size:1rem">sell</span>
+        Registrar venta
       </button>
     </div>
   </div>
 
-  <!-- Filtros -->
   <div class="filters">
     <select (change)="filterByBuilding($event)">
       <option value="">Todos los edificios</option>
       @for (building of buildings(); track building.id) {
-        <option [value]="building.id">{{ building.name }}</option>
+        <option [value]="building.name">{{ building.name }}</option>
       }
     </select>
 
@@ -31,13 +32,16 @@
       <option value="Rented">Alquilada</option>
     </select>
 
-    @if (selectedBuildingId() !== null || selectedStatus() !== null) {
-      <button class="btn-clear" (click)="clearFilters()">✕ Limpiar filtros</button>
+    @if (selectedBuildingName() !== null || selectedStatus() !== null) {
+      <button class="btn-clear" (click)="clearFilters()">
+        <span class="material-icons-round" style="font-size:0.9rem">close</span>
+        Limpiar filtros
+      </button>
     }
   </div>
 
   @if (loading()) {
-    <div class="loading"><p>Cargando unidades...</p></div>
+    <div class="loading"><div class="spinner"></div></div>
   }
 
   @if (error()) {
@@ -68,15 +72,24 @@
 
             <div class="unit-info">
               <div class="info-row">
-                <span class="info-label">🏢 Edificio</span>
+                <span class="info-label">
+                  <span class="material-icons-round">business</span>
+                  Edificio
+                </span>
                 <span>{{ unit.buildingName }}</span>
               </div>
               <div class="info-row">
-                <span class="info-label">📐 Área</span>
+                <span class="info-label">
+                  <span class="material-icons-round">straighten</span>
+                  Área
+                </span>
                 <span>{{ unit.areaM2 }} m²</span>
               </div>
               <div class="info-row">
-                <span class="info-label">🏠 Piso</span>
+                <span class="info-label">
+                  <span class="material-icons-round">layers</span>
+                  Piso
+                </span>
                 <span>{{ unit.floor }}°</span>
               </div>
             </div>

@@ -7,7 +7,8 @@
     <div class="header-actions">
       <span class="badge">{{ filteredRentals().length }} contratos</span>
       <button class="btn-new" (click)="showModal.set(true)">
-        📋 Nuevo contrato
+        <span class="material-icons-round" style="font-size:1rem">add</span>
+        Nuevo contrato
       </button>
     </div>
   </div>
@@ -32,7 +33,7 @@
   </div>
 
   @if (loading()) {
-    <div class="loading"><p>Cargando contratos...</p></div>
+    <div class="loading"><div class="spinner"></div></div>
   }
 
   @if (error()) {
@@ -66,7 +67,8 @@
                 </span>
                 @if (rental.status === 'Active') {
                   <button class="btn-pay" (click)="openPayment(rental)">
-                    💳 Registrar pago
+                    <span class="material-icons-round">payments</span>
+                    Registrar pago
                   </button>
                 }
               </div>

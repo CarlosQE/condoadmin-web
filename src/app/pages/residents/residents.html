@@ -7,9 +7,8 @@
     <span class="badge">{{ filteredResidents().length }} residentes</span>
   </div>
 
-  <!-- Búsqueda -->
   <div class="search-bar">
-    <span class="search-icon">🔍</span>
+    <span class="material-icons-round search-icon">search</span>
     <input
       type="text"
       placeholder="Buscar por nombre o DNI..."
@@ -17,12 +16,14 @@
       (input)="updateSearch($event)"
     />
     @if (search()) {
-      <button class="btn-clear" (click)="search.set('')">✕</button>
+      <button class="btn-clear-search" (click)="search.set('')">
+        <span class="material-icons-round" style="font-size:1.1rem">close</span>
+      </button>
     }
   </div>
 
   @if (loading()) {
-    <div class="loading"><p>Cargando residentes...</p></div>
+    <div class="loading"><div class="spinner"></div></div>
   }
 
   @if (error()) {
@@ -49,9 +50,18 @@
             <div class="resident-info">
               <div class="resident-name">{{ resident.fullName }}</div>
               <div class="resident-details">
-                <span>🪪 {{ resident.dni }}</span>
-                <span>📧 {{ resident.email }}</span>
-                <span>📱 {{ resident.phone }}</span>
+                <span>
+                  <span class="material-icons-round">badge</span>
+                  {{ resident.dni }}
+                </span>
+                <span>
+                  <span class="material-icons-round">email</span>
+                  {{ resident.email }}
+                </span>
+                <span>
+                  <span class="material-icons-round">phone</span>
+                  {{ resident.phone }}
+                </span>
               </div>
             </div>
 

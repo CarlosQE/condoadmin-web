@@ -1,23 +1,21 @@
 .buildings-page {
-  padding: 1rem 0;
+  padding: 0;
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1.5rem;
+  align-items: center;
+  margin-bottom: 2rem;
 }
 
 .page-header h2 {
-  margin: 0 0 0.25rem 0;
-  color: #2c3e50;
+  margin-bottom: 0.25rem;
 }
 
 .subtitle {
-  color: #6c757d;
-  margin: 0;
-  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
 }
 
 .header-actions {
@@ -27,120 +25,142 @@
 }
 
 .badge {
-  background: #e9ecef;
-  color: #6c757d;
-  padding: 0.25rem 0.75rem;
+  background: var(--primary-50);
+  color: var(--primary-700);
+  padding: 0.35rem 1rem;
   border-radius: 20px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
 .btn-new {
-  padding: 0.5rem 1.25rem;
-  background: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.625rem 1.25rem;
+  background: var(--primary-500);
   color: white;
   border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
   font-weight: 600;
-  transition: background 0.2s;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: var(--shadow-1);
+  transition: var(--transition);
 }
 
 .btn-new:hover {
-  background: #1a252f;
+  background: var(--primary-600);
+  box-shadow: var(--shadow-2);
 }
 
 .buildings-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
 }
 
 .building-card {
-  background: white;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  padding: 1.25rem;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-1);
+  transition: var(--transition);
   cursor: pointer;
-  transition: all 0.2s;
 }
 
 .building-card:hover {
-  border-color: #2c3e50;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-3);
+  transform: translateY(-3px);
 }
 
 .building-card.inactive {
   opacity: 0.6;
 }
 
-.building-header {
+.building-card-top {
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+  padding: 1.25rem 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 0.75rem;
 }
 
-.building-header h3 {
-  margin: 0;
-  color: #2c3e50;
-  font-size: 1rem;
+.building-name {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .status {
   padding: 0.2rem 0.6rem;
   border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .status.active {
-  background: #d4edda;
-  color: #155724;
+  background: rgba(255,255,255,0.25);
+  color: white;
 }
 
 .status.inactive {
-  background: #f8d7da;
-  color: #721c24;
+  background: rgba(0,0,0,0.2);
+  color: rgba(255,255,255,0.8);
 }
 
-.address {
-  color: #6c757d;
-  font-size: 0.9rem;
-  margin: 0.5rem 0;
+.building-card-body {
+  padding: 1.25rem 1.5rem;
 }
 
-.building-footer {
-  margin-top: 1rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid #f0f0f0;
-  color: #6c757d;
-  font-size: 0.9rem;
+.building-info-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.building-info-row .material-icons-round {
+  font-size: 1rem;
+  color: var(--primary-400);
+}
+
+.building-card-footer {
+  padding: 0.75rem 1.5rem;
+  background: var(--gray-50);
+  border-top: 1px solid var(--gray-100);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.building-card-footer .material-icons-round {
+  font-size: 1rem;
+  color: var(--primary-400);
 }
 
 .loading, .empty {
   text-align: center;
-  padding: 3rem;
-  color: #6c757d;
+  padding: 4rem;
+  color: var(--text-secondary);
 }
 
 .error-box {
-  background: #f8d7da;
-  border: 1px solid #f5c6cb;
-  border-radius: 8px;
+  background: #FFEBEE;
+  border-left: 4px solid var(--error);
+  border-radius: var(--radius-md);
   padding: 1rem 1.5rem;
-  color: #721c24;
+  color: #C62828;
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.error-box button {
-  padding: 0.4rem 1rem;
-  background: #721c24;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
 }
