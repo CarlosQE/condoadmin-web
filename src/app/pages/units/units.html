@@ -6,6 +6,9 @@
     </div>
     <div class="header-actions">
       <span class="badge">{{ filteredUnits().length }} unidades</span>
+      <button class="btn-secondary" (click)="showUnitModal.set(true)">
+        + Nueva unidad
+      </button>
       <button class="btn-new" (click)="showSaleModal.set(true)">
         💰 Registrar venta
       </button>
@@ -22,25 +25,21 @@
     </select>
 
     <select (change)="filterByStatus($event)">
-  <option value="">Todos los estados</option>
-  <option value="Available">Disponible</option>
-  <option value="Sold">Vendida</option>
-  <option value="Rented">Alquilada</option>
-</select>
+      <option value="">Todos los estados</option>
+      <option value="Available">Disponible</option>
+      <option value="Sold">Vendida</option>
+      <option value="Rented">Alquilada</option>
+    </select>
 
     @if (selectedBuildingId() !== null || selectedStatus() !== null) {
-      <button class="btn-clear" (click)="clearFilters()">
-        ✕ Limpiar filtros
-      </button>
+      <button class="btn-clear" (click)="clearFilters()">✕ Limpiar filtros</button>
     }
   </div>
 
-  <!-- Estado de carga -->
   @if (loading()) {
     <div class="loading"><p>Cargando unidades...</p></div>
   }
 
-  <!-- Error -->
   @if (error()) {
     <div class="error-box">
       <p>⚠️ {{ error() }}</p>
@@ -48,7 +47,6 @@
     </div>
   }
 
-  <!-- Lista de unidades -->
   @if (!loading() && !error()) {
     @if (filteredUnits().length === 0) {
       <div class="empty">
@@ -70,9 +68,9 @@
 
             <div class="unit-info">
               <div class="info-row">
-  <span class="info-label">🏢 Edificio</span>
-  <span>{{ unit.buildingName }}</span>
-</div>
+                <span class="info-label">🏢 Edificio</span>
+                <span>{{ unit.buildingName }}</span>
+              </div>
               <div class="info-row">
                 <span class="info-label">📐 Área</span>
                 <span>{{ unit.areaM2 }} m²</span>
@@ -93,15 +91,24 @@
   }
 </div>
 
-<!-- Modal de venta -->
+<!-- Modal nueva unidad -->
+<app-modal
+  title="Nueva unidad"
+  [isOpen]="showUnitModal()"
+  (closed)="showUnitModal.set(false)">
+  <app-unit-form
+    (saved)="onUnitSaved()"
+    (cancel)="showUnitModal.set(false)">
+  </app-unit-form>
+</app-modal>
+
+<!-- Modal registrar venta -->
 <app-modal
   title="Registrar venta"
   [isOpen]="showSaleModal()"
   (closed)="showSaleModal.set(false)">
-
   <app-sale-form
     (saved)="onSaleSaved()"
     (cancel)="showSaleModal.set(false)">
   </app-sale-form>
-
 </app-modal>

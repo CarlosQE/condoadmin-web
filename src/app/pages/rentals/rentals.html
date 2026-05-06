@@ -12,7 +12,6 @@
     </div>
   </div>
 
-  <!-- Resumen financiero -->
   @if (!loading() && !error() && rentals().length > 0) {
     <div class="summary-cards">
       <div class="summary-card debt">
@@ -26,7 +25,6 @@
     </div>
   }
 
-  <!-- Filtros -->
   <div class="filter-tabs">
     <button [class.active]="filter() === 'all'"        (click)="setFilter('all')">Todos</button>
     <button [class.active]="filter() === 'active'"     (click)="setFilter('active')">Activos</button>
@@ -62,9 +60,16 @@
                   <div class="building-name">{{ rental.buildingName }}</div>
                 </div>
               </div>
-              <span class="status-badge" [class]="rental.status.toLowerCase()">
-                {{ getStatusLabel(rental.status) }}
-              </span>
+              <div class="rental-header-right">
+                <span class="status-badge" [class]="rental.status.toLowerCase()">
+                  {{ getStatusLabel(rental.status) }}
+                </span>
+                @if (rental.status === 'Active') {
+                  <button class="btn-pay" (click)="openPayment(rental)">
+                    💳 Registrar pago
+                  </button>
+                }
+              </div>
             </div>
 
             <div class="progress-section">
@@ -112,15 +117,30 @@
   }
 </div>
 
-<!-- Modal de nuevo contrato -->
+<!-- Modal nuevo contrato -->
 <app-modal
   title="Nuevo contrato de alquiler"
   [isOpen]="showModal()"
   (closed)="showModal.set(false)">
-
   <app-rental-form
     (saved)="onRentalSaved()"
     (cancel)="showModal.set(false)">
   </app-rental-form>
-
 </app-modal>
+
+<!-- Modal registrar pago -->
+@if (selectedRental) {
+  <app-modal
+    title="Registrar pago — {{ selectedRental.tenantName }}"
+    [isOpen]="showPaymentModal()"
+    (closed)="showPaymentModal.set(false)">
+    <app-payment-form
+      [contractId]="selectedRental.id"
+      [tenantName]="selectedRental.tenantName"
+      [unitNumber]="selectedRental.unitNumber"
+      [monthlyRent]="selectedRental.monthlyRent"
+      (saved)="onPaymentSaved()"
+      (cancel)="showPaymentModal.set(false)">
+    </app-payment-form>
+  </app-modal>
+}

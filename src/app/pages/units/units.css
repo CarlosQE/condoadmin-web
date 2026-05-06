@@ -219,3 +219,20 @@
 .btn-new:hover {
   background: #1a252f;
 }
+
+.btn-secondary {
+  padding: 0.5rem 1.25rem;
+  background: transparent;
+  color: #2c3e50;
+  border: 1px solid #2c3e50;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #2c3e50;
+  color: white;
+}

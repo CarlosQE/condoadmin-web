@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Modal } from '../../shared/modal/modal';
 import { SaleForm } from './sale-form/sale-form';
+import { UnitForm } from './unit-form/unit-form';
 
 interface Unit {
   id: number
@@ -11,9 +12,9 @@ interface Unit {
   floor: number
   areaM2: number
   monthlyFee: number
-  status: string        // ← string ahora
+  status: string
   buildingId: number
-  buildingName: string  // ← string directo
+  buildingName: string
 }
 
 interface Building {
@@ -25,46 +26,47 @@ interface Building {
   selector: 'app-units',
   templateUrl: './units.html',
   styleUrl: './units.css',
-  imports: [CommonModule, FormsModule, Modal, SaleForm]
+  imports: [CommonModule, FormsModule, Modal, SaleForm, UnitForm]
 })
 export class Units implements OnInit {
 
-  units     = signal<Unit[]>([])
-  buildings = signal<Building[]>([])
-  loading   = signal(true)
-  error     = signal<string | null>(null)
+  units         = signal<Unit[]>([])
+  buildings     = signal<Building[]>([])
+  loading       = signal(true)
+  error         = signal<string | null>(null)
   showSaleModal = signal(false)
+  showUnitModal = signal(false)
 
   selectedBuildingId = signal<number | null>(null)
-selectedStatus     = signal<string | null>(null)
+  selectedStatus     = signal<string | null>(null)
 
   filteredUnits = computed(() => {
-  let result = this.units()
+    let result = this.units()
 
-  const buildingId = this.selectedBuildingId()
-  if (buildingId !== null) {
-    result = result.filter(u => u.buildingId === buildingId)
-  }
+    const buildingId = this.selectedBuildingId()
+    if (buildingId !== null) {
+      result = result.filter(u => u.buildingId === buildingId)
+    }
 
-  const status = this.selectedStatus()
-  if (status !== null) {
-    result = result.filter(u => u.status === status)
-  }
+    const status = this.selectedStatus()
+    if (status !== null) {
+      result = result.filter(u => u.status === status)
+    }
 
-  return result
-})
+    return result
+  })
 
   statusLabels: Record<string, string> = {
-  'Available': 'Disponible',
-  'Sold':      'Vendida',
-  'Rented':    'Alquilada'
-}
+    'Available': 'Disponible',
+    'Sold':      'Vendida',
+    'Rented':    'Alquilada'
+  }
 
-statusColors: Record<string, string> = {
-  'Available': 'available',
-  'Sold':      'sold',
-  'Rented':    'rented'
-}
+  statusColors: Record<string, string> = {
+    'Available': 'available',
+    'Sold':      'sold',
+    'Rented':    'rented'
+  }
 
   constructor(private http: HttpClient) {}
 
@@ -92,29 +94,32 @@ statusColors: Record<string, string> = {
   loadBuildings() {
     this.http.get<Building[]>('http://localhost:5065/api/building').subscribe({
       next: (data) => this.buildings.set(data),
-      error: (err) => console.error(err)
+      error: (err)  => console.error(err)
     })
   }
 
   filterByBuilding(event: Event) {
-  const value = (event.target as HTMLSelectElement).value
-  this.selectedBuildingId.set(value === '' ? null : Number(value))
-}
+    const value = (event.target as HTMLSelectElement).value
+    this.selectedBuildingId.set(value === '' ? null : Number(value))
+  }
 
-filterByStatus(event: Event) {
-  const value = (event.target as HTMLSelectElement).value
-  this.selectedStatus.set(value === '' ? null : value)
-}
+  filterByStatus(event: Event) {
+    const value = (event.target as HTMLSelectElement).value
+    this.selectedStatus.set(value === '' ? null : value)
+  }
 
   clearFilters() {
-  this.selectedBuildingId.set(null)
-  this.selectedStatus.set(null)
-}
+    this.selectedBuildingId.set(null)
+    this.selectedStatus.set(null)
+  }
 
-  // Al guardar la venta recargamos las unidades
-  // para que las vendidas cambien su estado visualmente
   onSaleSaved() {
     this.showSaleModal.set(false)
+    this.loadUnits()
+  }
+
+  onUnitSaved() {
+    this.showUnitModal.set(false)
     this.loadUnits()
   }
 }

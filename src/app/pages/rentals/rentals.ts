@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Modal } from '../../shared/modal/modal';
 import { RentalForm } from './rental-form/rental-form';
+import { PaymentForm } from './payment-form/payment-form';
 
 interface Rental {
   id: number
@@ -25,15 +26,19 @@ interface Rental {
   selector: 'app-rentals',
   templateUrl: './rentals.html',
   styleUrl: './rentals.css',
-  imports: [CommonModule, FormsModule, Modal, RentalForm]
+  imports: [CommonModule, FormsModule, Modal, RentalForm, PaymentForm]
 })
 export class Rentals implements OnInit {
 
-  rentals       = signal<Rental[]>([])
-  loading       = signal(true)
-  error         = signal<string | null>(null)
-  filter        = signal<string>('all')
-  showModal     = signal(false)
+  rentals           = signal<Rental[]>([])
+  loading           = signal(true)
+  error             = signal<string | null>(null)
+  filter            = signal<string>('all')
+  showModal         = signal(false)
+  showPaymentModal  = signal(false)
+
+  // Contrato seleccionado para pagar
+  selectedRental: Rental | null = null
 
   filteredRentals = computed(() => {
     const f = this.filter()
@@ -81,8 +86,20 @@ export class Rentals implements OnInit {
     this.filter.set(f)
   }
 
+  // Abre el modal de pago con el contrato seleccionado
+  openPayment(rental: Rental) {
+    this.selectedRental = rental
+    this.showPaymentModal.set(true)
+  }
+
   onRentalSaved() {
     this.showModal.set(false)
+    this.loadRentals()
+  }
+
+  onPaymentSaved() {
+    this.showPaymentModal.set(false)
+    this.selectedRental = null
     this.loadRentals()
   }
 

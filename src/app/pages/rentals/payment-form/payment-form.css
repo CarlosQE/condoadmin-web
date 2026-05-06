@@ -1,0 +1,219 @@
+/* Info del contrato */
+.contract-info {
+  display: flex;
+  gap: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+}
+
+.info-label {
+  font-size: 0.75rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.info-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* Accesos rápidos */
+.quick-amounts {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.quick-label {
+  font-size: 0.82rem;
+  color: #6c757d;
+}
+
+.btn-quick {
+  padding: 0.3rem 0.75rem;
+  background: transparent;
+  border: 1px solid #dee2e6;
+  border-radius: 20px;
+  color: #495057;
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: all 0.2s;
+}
+
+.btn-quick:hover {
+  background: #2c3e50;
+  color: white;
+  border-color: #2c3e50;
+}
+
+/* Campos */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+input, select {
+  padding: 0.55rem 0.85rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #2c3e50;
+  transition: border-color 0.2s;
+  background: white;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #2c3e50;
+}
+
+input.invalid {
+  border-color: #e74c3c;
+}
+
+.error-msg {
+  font-size: 0.78rem;
+  color: #e74c3c;
+}
+
+.error-box {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  color: #721c24;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+/* Acciones */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 0.5rem;
+}
+
+.btn-cancel {
+  padding: 0.6rem 1.25rem;
+  background: transparent;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  color: #6c757d;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #f8f9fa;
+}
+
+.btn-save {
+  padding: 0.6rem 1.5rem;
+  background: #27ae60;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-save:hover:not(:disabled) {
+  background: #219a52;
+}
+
+.btn-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Resultado */
+.result {
+  text-align: center;
+  padding: 0.5rem 0;
+}
+
+.result-icon {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+}
+
+.result h3 {
+  color: #2c3e50;
+  margin: 0 0 1.25rem 0;
+}
+
+.result-details {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.result-details p {
+  margin: 0.4rem 0;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.periods-paid {
+  margin-bottom: 1rem;
+}
+
+.periods-paid h4 {
+  text-align: left;
+  color: #495057;
+  font-size: 0.85rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.periods-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.period-badge {
+  background: #d4edda;
+  color: #155724;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.result-message {
+  color: #6c757d;
+  font-size: 0.85rem;
+  font-style: italic;
+  margin: 0.75rem 0 1.25rem 0;
+}
